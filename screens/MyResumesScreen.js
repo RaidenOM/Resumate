@@ -16,7 +16,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {AppContext} from '../store/app-context';
 import {BASE_API_URL} from '../utils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomButton from '../components.js/CustomButton';
+import CustomButton from '../components/CustomButton';
+import {COLOR_PRIMARY, TEXT_SECONDARY} from '../colors';
 
 export default function MyResumesScreen() {
   const [resumes, setResumes] = useState([]);
@@ -63,7 +64,7 @@ export default function MyResumesScreen() {
     return (
       <View style={styles.loadingContainer}>
         {loading ? (
-          <ActivityIndicator color="#007aff" size="large" />
+          <ActivityIndicator color={COLOR_PRIMARY} size="large" />
         ) : (
           <Text style={styles.subtitle}>No Resume Found</Text>
         )}
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 10,
     bottom: '50%',
-    backgroundColor: '#007aff',
+    backgroundColor: COLOR_PRIMARY,
     padding: 10,
     borderRadius: 30,
     shadowColor: '#000',
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     bottom: '50%',
-    backgroundColor: '#007aff',
+    backgroundColor: COLOR_PRIMARY,
     padding: 10,
     borderRadius: 30,
     shadowColor: '#000',
@@ -216,6 +217,6 @@ const styles = StyleSheet.create({
   subtitle: {
     textAlign: 'center',
     marginBottom: 20,
-    color: '#5c5c5c',
+    color: TEXT_SECONDARY,
   },
 });

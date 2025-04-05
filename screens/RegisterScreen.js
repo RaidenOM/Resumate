@@ -9,7 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import CustomInput from '../components.js/CustomInput';
+import CustomInput from '../components/CustomInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import {AppContext} from '../store/app-context';

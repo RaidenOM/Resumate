@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {COLOR_SECONDARY} from '../colors';
 
 export default function CustomButton({
   children,
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    backgroundColor: '#bc02fa',
+    backgroundColor: COLOR_SECONDARY,
     flexDirection: 'row',
   },
   title: {

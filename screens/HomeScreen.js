@@ -10,15 +10,19 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useContext, useRef, useState} from 'react';
-import CustomButton from '../components.js/CustomButton';
+import CustomButton from '../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../store/app-context';
+import {TEXT_PRIMARY_DARK, TEXT_PRIMARY} from '../colors';
 
 export default function HomeScreen() {
   const flatListRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigation = useNavigation();
-  const {logout, user} = useContext(AppContext);
+  const {logout, user, theme, toggleTheme} = useContext(AppContext);
+
+  const isDarkTheme = theme === 'dark';
+  console.log(theme);
 
   const appFeatures = [
     {
@@ -48,7 +52,11 @@ export default function HomeScreen() {
   const screenWidth = Dimensions.get('window').width;
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isDarkTheme ? 'black' : 'white'},
+      ]}>
       <LinearGradient
         style={styles.header}
         colors={['#007aff', '#bc02fa']}
@@ -58,12 +66,29 @@ export default function HomeScreen() {
           <Text style={styles.headerTitle}>Welcome,</Text>
           <Text style={styles.headerSubtitle}>{user.username}</Text>
         </View>
-        <TouchableOpacity onPress={logout}>
-          <Ionicons name="exit-outline" size={20} color="#fff" />
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={{marginHorizontal: 20}}
+            onPress={toggleTheme}>
+            <Ionicons
+              name={isDarkTheme ? 'sunny' : 'moon'}
+              size={20}
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={logout}>
+            <Ionicons name="exit-outline" size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </LinearGradient>
 
-      <Text style={styles.title}>Build Your Resume!</Text>
+      <Text
+        style={[
+          styles.title,
+          {color: isDarkTheme ? TEXT_PRIMARY_DARK : TEXT_PRIMARY},
+        ]}>
+        Build Your Resume!
+      </Text>
       <View style={styles.carouselContainer}>
         <FlatList
           ref={flatListRef}
@@ -71,7 +96,13 @@ export default function HomeScreen() {
           renderItem={({item}) => (
             <View style={styles.feature}>
               <Image source={item.image} style={styles.featureImage} />
-              <Text style={styles.featureText}>{item.feature}</Text>
+              <Text
+                style={[
+                  styles.featureText,
+                  {color: isDarkTheme ? '#fff' : '#000'},
+                ]}>
+                {item.feature}
+              </Text>
             </View>
           )}
           keyExtractor={item => item.feature}
@@ -117,7 +148,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   header: {
     height: 200,
@@ -145,7 +175,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   title: {
-    color: '#40403f',
     marginTop: 20,
     fontSize: 20,
     textAlign: 'center',

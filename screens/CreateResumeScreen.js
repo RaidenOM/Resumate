@@ -11,11 +11,12 @@ import {
   Linking,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomInput from '../components.js/CustomInput';
-import CustomButton from '../components.js/CustomButton';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
 import axios from 'axios';
 import {BASE_API_URL} from '../utils';
 import {AppContext} from '../store/app-context';
+import {COLOR_PRIMARY, COLOR_TERTIARY, TEXT_PRIMARY} from '../colors';
 
 export default function CreateResumeScreen() {
   const {token} = useContext(AppContext);
@@ -384,7 +385,7 @@ export default function CreateResumeScreen() {
                 onPress={() => {
                   addLink(linkTitle, linkUrl);
                 }}>
-                <Ionicons name="add-circle" size={30} color="#007aff" />
+                <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -439,7 +440,7 @@ export default function CreateResumeScreen() {
                   setSkillName('');
                 }
               }}>
-              <Ionicons name="add-circle" size={30} color="#007aff" />
+              <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
             </TouchableOpacity>
           </View>
         </View>
@@ -471,7 +472,7 @@ export default function CreateResumeScreen() {
                 </View>
               ))}
             <CustomButton
-              style={{backgroundColor: '#007aff'}}
+              style={{backgroundColor: COLOR_PRIMARY}}
               onPress={() => setIsProjectModalVisible(true)}
               title={'Add Project'}
             />
@@ -506,7 +507,7 @@ export default function CreateResumeScreen() {
                 </View>
               ))}
             <CustomButton
-              style={{backgroundColor: '#007aff'}}
+              style={{backgroundColor: COLOR_PRIMARY}}
               onPress={() => setIsExperienceModalVisible(true)}
               title={'Add Experience'}
             />
@@ -541,9 +542,9 @@ export default function CreateResumeScreen() {
                 </View>
               ))}
             <CustomButton
-              style={{backgroundColor: '#007aff'}}
+              style={{backgroundColor: COLOR_PRIMARY}}
               onPress={() => setIsEducationModalVisible(true)}
-              title={'Add Education'}
+              title="Add Education "
             />
           </ScrollView>
         </View>
@@ -632,7 +633,7 @@ export default function CreateResumeScreen() {
                       setProjectDescriptionLine('');
                     }
                   }}>
-                  <Ionicons name="add-circle" size={30} color="#007aff" />
+                  <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
                 </TouchableOpacity>
               </View>
               {projectDescriptionLines.length > 0 && (
@@ -655,12 +656,12 @@ export default function CreateResumeScreen() {
                 </View>
               )}
               <CustomButton
-                style={{backgroundColor: '#007aff', marginBottom: 10}}
+                style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
                 onPress={addProject}
                 title={'Add Project'}
               />
               <CustomButton
-                style={{backgroundColor: '#ff4444'}}
+                style={{backgroundColor: COLOR_TERTIARY}}
                 onPress={() => setIsProjectModalVisible(false)}
                 title={'Cancel'}
               />
@@ -729,7 +730,7 @@ export default function CreateResumeScreen() {
                       setExperienceDescriptionLine('');
                     }
                   }}>
-                  <Ionicons name="add-circle" size={30} color="#007aff" />
+                  <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
                 </TouchableOpacity>
               </View>
               {experienceDescriptionLines.length > 0 && (
@@ -752,12 +753,12 @@ export default function CreateResumeScreen() {
                 </View>
               )}
               <CustomButton
-                style={{backgroundColor: '#007aff', marginBottom: 10}}
+                style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
                 onPress={addExperience}
                 title={'Add Experience'}
               />
               <CustomButton
-                style={{backgroundColor: '#ff4444'}}
+                style={{backgroundColor: COLOR_TERTIARY}}
                 onPress={() => setIsExperienceModalVisible(false)}
                 title={'Cancel'}
               />
@@ -809,7 +810,7 @@ export default function CreateResumeScreen() {
               />
 
               <CustomButton
-                style={{backgroundColor: '#007aff', marginBottom: 10}}
+                style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
                 onPress={addEducation}
                 title={'Add Education'}
               />
@@ -842,7 +843,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: TEXT_PRIMARY,
   },
   input: {
     marginBottom: 15,
@@ -867,13 +868,13 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 16,
-    color: '#333',
+    color: TEXT_PRIMARY,
   },
   leftButton: {
     position: 'absolute',
     left: 10,
     bottom: 20,
-    backgroundColor: '#007aff',
+    backgroundColor: COLOR_PRIMARY,
     padding: 10,
     borderRadius: 30,
     shadowColor: '#000',
@@ -886,7 +887,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     bottom: 20,
-    backgroundColor: '#007aff',
+    backgroundColor: COLOR_PRIMARY,
     padding: 10,
     borderRadius: 30,
     shadowColor: '#000',
@@ -908,7 +909,7 @@ const styles = StyleSheet.create({
   },
   skillText: {
     fontSize: 16,
-    color: '#333',
+    color: TEXT_PRIMARY,
   },
   skillInputContainer: {
     flexDirection: 'row',
@@ -947,6 +948,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: TEXT_PRIMARY,
   },
   descriptionContainer: {
     flexDirection: 'row',
@@ -966,10 +968,10 @@ const styles = StyleSheet.create({
   },
   descriptionLineText: {
     fontSize: 16,
-    color: '#333',
+    color: TEXT_PRIMARY,
   },
   cancelButton: {
-    backgroundColor: '#ff4444',
+    backgroundColor: COLOR_TERTIARY,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',

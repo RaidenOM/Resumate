@@ -22,11 +22,23 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import AppProvider, {AppContext} from './store/app-context';
 import {useContext} from 'react';
+import {
+  COLOR_PRIMARY,
+  COLOR_SECONDARY,
+  COLOR_TERTIARY_DARK,
+  TEXT_PRIMARY,
+  TEXT_PRIMARY_DARK,
+  TEXT_SECONDARY,
+  TEXT_SECONDARY_DARK,
+  TEXT_TERTIARY_DARK,
+} from './colors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Tabs() {
+  const {theme} = useContext(AppContext);
+  const isDarkTheme = theme === 'dark';
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -50,6 +62,13 @@ function Tabs() {
             );
           }
         },
+        tabBarActiveTintColor: COLOR_PRIMARY,
+        tabBarInactiveTintColor: isDarkTheme
+          ? TEXT_SECONDARY_DARK
+          : TEXT_SECONDARY,
+        tabBarStyle: {
+          backgroundColor: isDarkTheme ? TEXT_PRIMARY : '#fff',
+        },
       })}>
       <Tab.Screen
         component={HomeScreen}
@@ -64,7 +83,7 @@ function Tabs() {
           headerBackgroundContainerStyle: {backgroundColor: '#fff'},
           headerBackground: () => (
             <LinearGradient
-              colors={['#007aff', '#bc02fa']}
+              colors={[COLOR_PRIMARY, COLOR_SECONDARY]}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 1}}
               style={{
@@ -107,7 +126,7 @@ function MainAppStack() {
           headerBackgroundContainerStyle: {backgroundColor: '#fff'},
           headerBackground: () => (
             <LinearGradient
-              colors={['#007aff', '#bc02fa']}
+              colors={[COLOR_PRIMARY, COLOR_SECONDARY]}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 1}}
               style={{
@@ -163,7 +182,7 @@ function Navigation() {
               shadowOpacity: 0.3,
               shadowRadius: 3,
               elevation: 5,
-              marginBottom: 20,
+              marginVertical: 50,
             }}>
             <Image
               source={require('./assets/Resumate.png')}
@@ -171,8 +190,8 @@ function Navigation() {
               style={{height: 200, width: 200}}
             />
           </View>
-          <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={{marginTop: 20, color: '#7f8c8d'}}>
+          <ActivityIndicator size="large" color={COLOR_PRIMARY} />
+          <Text style={{marginTop: 20, color: TEXT_SECONDARY}}>
             Designed by Om Kumar
           </Text>
         </View>
