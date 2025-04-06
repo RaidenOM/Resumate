@@ -80,7 +80,9 @@ function Tabs() {
         name="MyResumesScreen"
         options={{
           tabBarLabel: 'My Resumes',
-          headerBackgroundContainerStyle: {backgroundColor: '#fff'},
+          headerBackgroundContainerStyle: {
+            backgroundColor: isDarkTheme ? '#000' : '#fff',
+          },
           headerBackground: () => (
             <LinearGradient
               colors={[COLOR_PRIMARY, COLOR_SECONDARY]}

@@ -9,7 +9,6 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import CustomInput from '../components/CustomInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import {AppContext} from '../store/app-context';
@@ -79,7 +78,7 @@ export default function LoginScreen() {
           value={username}
           onChangeText={setUsername}
           placeholder="Username"
-          autoCapitalize={false}
+          autoCapitalize="none"
           style={styles.input}
         />
       </View>
@@ -88,7 +87,7 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
           placeholder="Password"
-          autoCapitalize={false}
+          autoCapitalize="none"
           secureTextEntry={encrypted}
           style={styles.input}
         />

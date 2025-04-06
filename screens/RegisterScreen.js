@@ -9,7 +9,6 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import CustomInput from '../components/CustomInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import {AppContext} from '../store/app-context';
@@ -81,7 +80,7 @@ export default function RegisterScreen() {
           value={username}
           onChangeText={setUsername}
           placeholder="Userame"
-          autoCapitalize={false}
+          autoCapitalize="none"
           style={styles.input}
         />
       </View>
@@ -90,7 +89,7 @@ export default function RegisterScreen() {
           value={password}
           onChangeText={setPassword}
           placeholder="Password"
-          autoCapitalize={false}
+          autoCapitalize="none"
           secureTextEntry={encrypted}
           style={styles.input}
         />
@@ -106,7 +105,7 @@ export default function RegisterScreen() {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           placeholder="Confirm Password"
-          autoCapitalize={false}
+          autoCapitalize="none"
           secureTextEntry={encryptedConfim}
           style={styles.input}
         />

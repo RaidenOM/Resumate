@@ -9,6 +9,8 @@ import {
   Modal,
   Alert,
   Linking,
+  ImageBackground,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomInput from '../components/CustomInput';
@@ -406,43 +408,45 @@ export default function CreateResumeScreen() {
         {/* Skills Sub-Screen */}
         <View style={[styles.subScreenContainer, {width: screenWidth}]}>
           <Text style={styles.screenTitle}>Skills</Text>
-          {skills.length > 0 && (
-            <View style={styles.skillsList}>
-              {skills.map((skill, index) => (
-                <View key={index} style={styles.skillItem}>
-                  <Text style={styles.skillText}>{skill}</Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSkills(prevSkills => {
-                        const newSkills = [...prevSkills];
-                        newSkills.splice(index, 1);
-                        return newSkills;
-                      });
-                    }}>
-                    <Ionicons name="trash" size={20} color={'red'} />
-                  </TouchableOpacity>
-                </View>
-              ))}
+          <ScrollView contentContainerStyle={styles.subScreenContent}>
+            {skills.length > 0 && (
+              <View style={styles.skillsList}>
+                {skills.map((skill, index) => (
+                  <View key={index} style={styles.skillItem}>
+                    <Text style={styles.skillText}>{skill}</Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSkills(prevSkills => {
+                          const newSkills = [...prevSkills];
+                          newSkills.splice(index, 1);
+                          return newSkills;
+                        });
+                      }}>
+                      <Ionicons name="trash" size={20} color={'red'} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+            <View style={styles.skillInputContainer}>
+              <CustomInput
+                placeholder="Enter Skill Name"
+                value={skillName}
+                onChangeText={setSkillName}
+                style={{flex: 1, marginRight: 10}}
+              />
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => {
+                  if (skillName.trim()) {
+                    setSkills(prevSkills => [...prevSkills, skillName.trim()]);
+                    setSkillName('');
+                  }
+                }}>
+                <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
+              </TouchableOpacity>
             </View>
-          )}
-          <View style={styles.skillInputContainer}>
-            <CustomInput
-              placeholder="Enter Skill Name"
-              value={skillName}
-              onChangeText={setSkillName}
-              style={{flex: 1, marginRight: 10}}
-            />
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => {
-                if (skillName.trim()) {
-                  setSkills(prevSkills => [...prevSkills, skillName.trim()]);
-                  setSkillName('');
-                }
-              }}>
-              <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
-            </TouchableOpacity>
-          </View>
+          </ScrollView>
         </View>
 
         {/* Projects Sub-Screen */}
@@ -591,83 +595,104 @@ export default function CreateResumeScreen() {
         visible={isProjectModalVisible}
         animationType="slide"
         transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ScrollView
-              contentContainerStyle={{flexGrow: 1}}
-              keyboardShouldPersistTaps="handled">
-              <Text style={styles.modalTitle}>Add Project</Text>
-              <CustomInput
-                placeholder="Project Name"
-                value={projectName}
-                onChangeText={setProjectName}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="Start Date (MM/YYYY)"
-                value={projectFrom}
-                onChangeText={setProjectFrom}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="End Date (MM/YYYY)"
-                value={projectTo}
-                onChangeText={setProjectTo}
-                style={styles.input}
-              />
-              <View style={styles.descriptionContainer}>
-                <CustomInput
-                  placeholder="Add a description line"
-                  value={projectDescriptionLine}
-                  onChangeText={setProjectDescriptionLine}
-                  style={{flex: 1, marginRight: 10}}
-                />
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => {
-                    if (projectDescriptionLine.trim()) {
-                      setProjectDescriptionLines(prevLines => [
-                        ...prevLines,
-                        projectDescriptionLine.trim(),
-                      ]);
-                      setProjectDescriptionLine('');
-                    }
-                  }}>
-                  <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
-                </TouchableOpacity>
-              </View>
-              {projectDescriptionLines.length > 0 && (
-                <View style={styles.descriptionLinesList}>
-                  {projectDescriptionLines.map((line, index) => (
-                    <View key={index} style={styles.descriptionLineItem}>
-                      <Text style={styles.descriptionLineText}>{line}</Text>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setProjectDescriptionLines(prevLines => {
-                            const newLines = [...prevLines];
-                            newLines.splice(index, 1);
-                            return newLines;
-                          });
-                        }}>
-                        <Ionicons name="trash" size={20} color={'red'} />
-                      </TouchableOpacity>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setIsProjectModalVisible(false);
+          }}>
+          <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <ScrollView
+                  contentContainerStyle={{flexGrow: 1}}
+                  keyboardShouldPersistTaps="handled">
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginBottom: 20,
+                    }}>
+                    <TouchableOpacity
+                      style={{position: 'absolute', zIndex: 1}}
+                      onPress={() => {
+                        setIsProjectModalVisible(false);
+                      }}>
+                      <Ionicons name="arrow-back-circle" size={30} />
+                    </TouchableOpacity>
+                    <Text style={[styles.modalTitle, {flex: 1}]}>
+                      Add Project
+                    </Text>
+                  </View>
+                  <CustomInput
+                    placeholder="Project Name"
+                    value={projectName}
+                    onChangeText={setProjectName}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="Start Date (MM/YYYY)"
+                    value={projectFrom}
+                    onChangeText={setProjectFrom}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="End Date (MM/YYYY)"
+                    value={projectTo}
+                    onChangeText={setProjectTo}
+                    style={styles.input}
+                  />
+                  <View style={styles.descriptionContainer}>
+                    <CustomInput
+                      placeholder="Add a description line"
+                      value={projectDescriptionLine}
+                      onChangeText={setProjectDescriptionLine}
+                      style={{flex: 1, marginRight: 10}}
+                    />
+                    <TouchableOpacity
+                      style={styles.addButton}
+                      onPress={() => {
+                        if (projectDescriptionLine.trim()) {
+                          setProjectDescriptionLines(prevLines => [
+                            ...prevLines,
+                            projectDescriptionLine.trim(),
+                          ]);
+                          setProjectDescriptionLine('');
+                        }
+                      }}>
+                      <Ionicons
+                        name="add-circle"
+                        size={30}
+                        color={COLOR_PRIMARY}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {projectDescriptionLines.length > 0 && (
+                    <View style={styles.descriptionLinesList}>
+                      {projectDescriptionLines.map((line, index) => (
+                        <View key={index} style={styles.descriptionLineItem}>
+                          <Text style={styles.descriptionLineText}>{line}</Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setProjectDescriptionLines(prevLines => {
+                                const newLines = [...prevLines];
+                                newLines.splice(index, 1);
+                                return newLines;
+                              });
+                            }}>
+                            <Ionicons name="trash" size={20} color={'red'} />
+                          </TouchableOpacity>
+                        </View>
+                      ))}
                     </View>
-                  ))}
-                </View>
-              )}
-              <CustomButton
-                style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
-                onPress={addProject}
-                title={'Add Project'}
-              />
-              <CustomButton
-                style={{backgroundColor: COLOR_TERTIARY}}
-                onPress={() => setIsProjectModalVisible(false)}
-                title={'Cancel'}
-              />
-            </ScrollView>
+                  )}
+                  <CustomButton
+                    style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
+                    onPress={addProject}
+                    title={'Add Project'}
+                  />
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
 
       {/* Modal for Adding Experience */}
@@ -675,96 +700,117 @@ export default function CreateResumeScreen() {
         visible={isExperienceModalVisible}
         animationType="slide"
         transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ScrollView
-              contentContainerStyle={{flexGrow: 1}}
-              keyboardShouldPersistTaps="handled">
-              <Text style={styles.modalTitle}>Add Experience</Text>
-              <CustomInput
-                placeholder="Enter Position"
-                value={position}
-                onChangeText={setPosition}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="Company Name"
-                value={companyName}
-                onChangeText={setCompanyName}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="Location"
-                value={experienceLocation}
-                onChangeText={setExperienceLocation}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="Start Date (MM/YYYY)"
-                value={experienceFrom}
-                onChangeText={setExperienceFrom}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="End Date (MM/YYYY)"
-                value={experienceTo}
-                onChangeText={setExperienceTo}
-                style={styles.input}
-              />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setIsExperienceModalVisible(false);
+          }}>
+          <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <ScrollView
+                  contentContainerStyle={{flexGrow: 1}}
+                  keyboardShouldPersistTaps="handled">
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginBottom: 20,
+                    }}>
+                    <TouchableOpacity
+                      style={{position: 'absolute', zIndex: 1}}
+                      onPress={() => {
+                        setIsExperienceModalVisible(false);
+                      }}>
+                      <Ionicons name="arrow-back-circle" size={30} />
+                    </TouchableOpacity>
+                    <Text style={[styles.modalTitle, {flex: 1}]}>
+                      Add Experience
+                    </Text>
+                  </View>
+                  <CustomInput
+                    placeholder="Enter Position"
+                    value={position}
+                    onChangeText={setPosition}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="Company Name"
+                    value={companyName}
+                    onChangeText={setCompanyName}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="Location"
+                    value={experienceLocation}
+                    onChangeText={setExperienceLocation}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="Start Date (MM/YYYY)"
+                    value={experienceFrom}
+                    onChangeText={setExperienceFrom}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="End Date (MM/YYYY)"
+                    value={experienceTo}
+                    onChangeText={setExperienceTo}
+                    style={styles.input}
+                  />
 
-              <View style={styles.descriptionContainer}>
-                <CustomInput
-                  placeholder="Add a description line"
-                  value={experienceDescriptionLine}
-                  onChangeText={setExperienceDescriptionLine}
-                  style={{flex: 1, marginRight: 10}}
-                />
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => {
-                    if (experienceDescriptionLine.trim()) {
-                      setExperienceDescriptionLines(prevLines => [
-                        ...prevLines,
-                        experienceDescriptionLine.trim(),
-                      ]);
-                      setExperienceDescriptionLine('');
-                    }
-                  }}>
-                  <Ionicons name="add-circle" size={30} color={COLOR_PRIMARY} />
-                </TouchableOpacity>
-              </View>
-              {experienceDescriptionLines.length > 0 && (
-                <View style={styles.descriptionLinesList}>
-                  {experienceDescriptionLines.map((line, index) => (
-                    <View key={index} style={styles.descriptionLineItem}>
-                      <Text style={styles.descriptionLineText}>{line}</Text>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setExperienceDescriptionLines(prevLines => {
-                            const newLines = [...prevLines];
-                            newLines.splice(index, 1);
-                            return newLines;
-                          });
-                        }}>
-                        <Ionicons name="trash" size={20} color={'red'} />
-                      </TouchableOpacity>
+                  <View style={styles.descriptionContainer}>
+                    <CustomInput
+                      placeholder="Add a description line"
+                      value={experienceDescriptionLine}
+                      onChangeText={setExperienceDescriptionLine}
+                      style={{flex: 1, marginRight: 10}}
+                    />
+                    <TouchableOpacity
+                      style={styles.addButton}
+                      onPress={() => {
+                        if (experienceDescriptionLine.trim()) {
+                          setExperienceDescriptionLines(prevLines => [
+                            ...prevLines,
+                            experienceDescriptionLine.trim(),
+                          ]);
+                          setExperienceDescriptionLine('');
+                        }
+                      }}>
+                      <Ionicons
+                        name="add-circle"
+                        size={30}
+                        color={COLOR_PRIMARY}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {experienceDescriptionLines.length > 0 && (
+                    <View style={styles.descriptionLinesList}>
+                      {experienceDescriptionLines.map((line, index) => (
+                        <View key={index} style={styles.descriptionLineItem}>
+                          <Text style={styles.descriptionLineText}>{line}</Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setExperienceDescriptionLines(prevLines => {
+                                const newLines = [...prevLines];
+                                newLines.splice(index, 1);
+                                return newLines;
+                              });
+                            }}>
+                            <Ionicons name="trash" size={20} color={'red'} />
+                          </TouchableOpacity>
+                        </View>
+                      ))}
                     </View>
-                  ))}
-                </View>
-              )}
-              <CustomButton
-                style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
-                onPress={addExperience}
-                title={'Add Experience'}
-              />
-              <CustomButton
-                style={{backgroundColor: COLOR_TERTIARY}}
-                onPress={() => setIsExperienceModalVisible(false)}
-                title={'Cancel'}
-              />
-            </ScrollView>
+                  )}
+                  <CustomButton
+                    style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
+                    onPress={addExperience}
+                    title={'Add Experience'}
+                  />
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
 
       {/* Modal for Adding Education */}
@@ -772,56 +818,73 @@ export default function CreateResumeScreen() {
         visible={isEducationModalVisible}
         animationType="slide"
         transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ScrollView
-              contentContainerStyle={{flexGrow: 1}}
-              keyboardShouldPersistTaps="handled">
-              <Text style={styles.modalTitle}>Add Education</Text>
-              <CustomInput
-                placeholder="Enter Degree"
-                value={degree}
-                onChangeText={setDegree}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="University Name"
-                value={university}
-                onChangeText={setUniversity}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="Location"
-                value={educationLocation}
-                onChangeText={setEducationLocation}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="Start Date (MM/YYYY)"
-                value={educationFrom}
-                onChangeText={setEducationFrom}
-                style={styles.input}
-              />
-              <CustomInput
-                placeholder="End Date (MM/YYYY)"
-                value={educationTo}
-                onChangeText={setEducationTo}
-                style={styles.input}
-              />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setIsEducationModalVisible(false);
+          }}>
+          <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <ScrollView
+                  contentContainerStyle={{flexGrow: 1}}
+                  keyboardShouldPersistTaps="handled">
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginBottom: 20,
+                    }}>
+                    <TouchableOpacity
+                      style={{position: 'absolute', zIndex: 1}}
+                      onPress={() => {
+                        setIsEducationModalVisible(false);
+                      }}>
+                      <Ionicons name="arrow-back-circle" size={30} />
+                    </TouchableOpacity>
+                    <Text style={[styles.modalTitle, {flex: 1}]}>
+                      Add Education
+                    </Text>
+                  </View>
+                  <CustomInput
+                    placeholder="Enter Degree"
+                    value={degree}
+                    onChangeText={setDegree}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="University Name"
+                    value={university}
+                    onChangeText={setUniversity}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="Location"
+                    value={educationLocation}
+                    onChangeText={setEducationLocation}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="Start Date (MM/YYYY)"
+                    value={educationFrom}
+                    onChangeText={setEducationFrom}
+                    style={styles.input}
+                  />
+                  <CustomInput
+                    placeholder="End Date (MM/YYYY)"
+                    value={educationTo}
+                    onChangeText={setEducationTo}
+                    style={styles.input}
+                  />
 
-              <CustomButton
-                style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
-                onPress={addEducation}
-                title={'Add Education'}
-              />
-              <CustomButton
-                style={{backgroundColor: '#ff4444'}}
-                onPress={() => setIsEducationModalVisible(false)}
-                title={'Cancel'}
-              />
-            </ScrollView>
+                  <CustomButton
+                    style={{backgroundColor: COLOR_PRIMARY, marginBottom: 10}}
+                    onPress={addEducation}
+                    title={'Add Education'}
+                  />
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
@@ -930,9 +993,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     width: '100%',
@@ -940,13 +1002,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     padding: 20,
-    maxHeight: 500,
-    minHeight: 500,
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
     textAlign: 'center',
     color: TEXT_PRIMARY,
   },

@@ -16,17 +16,18 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {AppContext} from '../store/app-context';
 import {BASE_API_URL} from '../utils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomButton from '../components/CustomButton';
-import {COLOR_PRIMARY, TEXT_SECONDARY} from '../colors';
+import {COLOR_PRIMARY, TEXT_SECONDARY, TEXT_SECONDARY_DARK} from '../colors';
 
 export default function MyResumesScreen() {
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const {token} = useContext(AppContext);
+  const {token, theme} = useContext(AppContext);
   const isFocused = useIsFocused();
   const [index, setIndex] = useState(0);
   const scrollViewRef = useRef();
   console.log(token);
+
+  const isDarkTheme = theme === 'dark';
 
   const scrollToIndex = index => {
     if (index >= 0 && index < resumes.length && scrollViewRef.current) {
@@ -60,97 +61,101 @@ export default function MyResumesScreen() {
     if (isFocused) fetchResumes();
   }, [isFocused]);
 
-  if (loading || (resumes && resumes.length === 0)) {
-    return (
-      <View style={styles.loadingContainer}>
-        {loading ? (
-          <ActivityIndicator color={COLOR_PRIMARY} size="large" />
-        ) : (
-          <Text style={styles.subtitle}>No Resume Found</Text>
-        )}
-      </View>
-    );
-  }
-
   const screenWidth = Dimensions.get('window').width;
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        horizontal
-        pagingEnabled
-        ref={scrollViewRef}
-        onMomentumScrollEnd={event => {
-          const newIndex = Math.round(
-            event.nativeEvent.contentOffset.x / screenWidth,
-          );
-          setIndex(newIndex);
-        }}
-        showsHorizontalScrollIndicator={false}>
-        {resumes &&
-          resumes.length > 0 &&
-          resumes.map((resume, index) => (
-            <View style={styles.resumeCarouselContainer} key={index}>
-              <View style={styles.resumeCarouselContent}>
-                <TouchableOpacity
-                  style={styles.previewImageContainer}
-                  onPress={() => {
-                    Linking.openURL(resume.url);
-                  }}
-                  onLongPress={() => {
-                    Alert.alert(
-                      'Confirm Delete',
-                      'Are you sure you want to delete this resume?',
-                      [
-                        {text: 'Cancel', style: 'cancel'},
-                        {
-                          text: 'Confirm',
-                          style: 'destructive',
-                          onPress: async () => {
-                            setResumes(prevResumes =>
-                              prevResumes.filter(r => r._id !== resume._id),
-                            );
-                            await axios.delete(
-                              BASE_API_URL + `/resume/${resume._id}`,
-                              {
-                                headers: {
-                                  Authorization: `Bearer ${token}`,
-                                },
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isDarkTheme ? '#000' : '#fff'},
+      ]}>
+      {loading || (resumes && resumes.length === 0) ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          {loading ? (
+            <ActivityIndicator color={COLOR_PRIMARY} size="large" />
+          ) : (
+            <Text style={styles.subtitle}>No Resume Found</Text>
+          )}
+        </View>
+      ) : (
+        <>
+          <ScrollView
+            horizontal
+            pagingEnabled
+            ref={scrollViewRef}
+            onMomentumScrollEnd={event => {
+              const newIndex = Math.round(
+                event.nativeEvent.contentOffset.x / screenWidth,
+              );
+              setIndex(newIndex);
+            }}
+            showsHorizontalScrollIndicator={false}>
+            {resumes &&
+              resumes.length > 0 &&
+              resumes.map((resume, index) => (
+                <View style={styles.resumeCarouselContainer} key={index}>
+                  <View style={styles.resumeCarouselContent}>
+                    <TouchableOpacity
+                      style={styles.previewImageContainer}
+                      onPress={() => {
+                        Linking.openURL(resume.url);
+                      }}
+                      onLongPress={() => {
+                        Alert.alert(
+                          'Confirm Delete',
+                          'Are you sure you want to delete this resume?',
+                          [
+                            {text: 'Cancel', style: 'cancel'},
+                            {
+                              text: 'Confirm',
+                              style: 'destructive',
+                              onPress: async () => {
+                                setResumes(prevResumes =>
+                                  prevResumes.filter(r => r._id !== resume._id),
+                                );
+                                await axios.delete(
+                                  BASE_API_URL + `/resume/${resume._id}`,
+                                  {
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
+                                  },
+                                );
                               },
-                            );
-                          },
-                        },
-                      ],
-                    );
-                  }}>
-                  <Image
-                    source={{uri: resume.previewUrl}}
-                    style={{width: '100%', height: '100%'}}
-                    resizeMode="stretch"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-      </ScrollView>
-      <Text style={styles.subtitle}>Tap to open, hold to delete</Text>
-      {index !== 0 && (
-        <TouchableOpacity
-          style={styles.leftButton}
-          onPress={() => {
-            scrollToIndex(index - 1);
-          }}>
-          <Ionicons name="chevron-back" size={20} color="#fff" />
-        </TouchableOpacity>
-      )}
-      {index < resumes.length - 1 && (
-        <TouchableOpacity
-          style={styles.rightButton}
-          onPress={() => {
-            scrollToIndex(index + 1);
-          }}>
-          <Ionicons name="chevron-forward" size={20} color="#fff" />
-        </TouchableOpacity>
+                            },
+                          ],
+                        );
+                      }}>
+                      <Image
+                        source={{uri: resume.previewUrl}}
+                        style={{width: '100%', height: '100%'}}
+                        resizeMode="stretch"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+          </ScrollView>
+          <Text style={styles.subtitle}>Tap to open, hold to delete</Text>
+          {index !== 0 && (
+            <TouchableOpacity
+              style={styles.leftButton}
+              onPress={() => {
+                scrollToIndex(index - 1);
+              }}>
+              <Ionicons name="chevron-back" size={20} color="#fff" />
+            </TouchableOpacity>
+          )}
+          {index < resumes.length - 1 && (
+            <TouchableOpacity
+              style={styles.rightButton}
+              onPress={() => {
+                scrollToIndex(index + 1);
+              }}>
+              <Ionicons name="chevron-forward" size={20} color="#fff" />
+            </TouchableOpacity>
+          )}
+        </>
       )}
     </View>
   );
@@ -159,7 +164,6 @@ export default function MyResumesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   loadingContainer: {
     flex: 1,
